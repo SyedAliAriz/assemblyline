@@ -26,9 +26,9 @@ int assemblyiterative(int a[][NUM_STATION], int t[][NUM_STATION], int *e, int *x
 	// Fill tables T1[],T2[] and T3[] using the above given recursive relations
 	for (i = 1; i < NUM_STATION; ++i)
 	{
-		T1[i] = min(T1[i - 1] + a[0][i], T2[i - 1] + t[1][i] + a[0][i], T3[i - 1] + t[2][i] + a[2][i]);
-		T2[i] = min(T2[i - 1] + a[1][i], T1[i - 1] + t[0][i] + a[1][i], T3[i - 1] + t[2][i] + a[2][i]);
-		T3[i] = min(T3[i - 1] + a[2][i], T1[i - 1] + t[0][i] + a[0][i], T2[i - 1] + t[1][i] + a[0][i]);
+		T1[i] = min(T1[i - 1] + a[0][i], T2[i - 1] + t[1][i] + a[0][i], T3[i - 1] + t[2][i] + a[0][i]);
+		T2[i] = min(T2[i - 1] + a[1][i], T1[i - 1] + t[1][i] + a[1][i], T3[i - 1] + t[2][i] + a[1][i]);
+		T3[i] = min(T3[i - 1] + a[2][i], T1[i - 1] + t[1][i] + a[2][i], T2[i - 1] + t[2][i] + a[2][i]);
 	}
 
 	// Consider exit times and return minimum
