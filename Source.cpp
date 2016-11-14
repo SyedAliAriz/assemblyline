@@ -1,10 +1,11 @@
 #include <stdio.h>
 #define NUM_LINE 3
 #define NUM_STATION 4
+#define MAX 999999
 
 // Utility function to find minimum of two numbers
 int min(int x, int y, int z) {
-	int smallest = 999999;
+	int smallest = MAX;
 	if (x < smallest)
 		smallest = x;
 	if (y < smallest)
@@ -14,7 +15,7 @@ int min(int x, int y, int z) {
 	return smallest;
 }
 
-int carAssemblyiterative(int a[][NUM_STATION], int t[][NUM_STATION], int *e, int *x)
+int assemblyiterative(int a[][NUM_STATION], int t[][NUM_STATION], int *e, int *x)
 {
 	int T1[NUM_STATION], T2[NUM_STATION], T3[NUM_STATION], i;
 
@@ -34,14 +35,38 @@ int carAssemblyiterative(int a[][NUM_STATION], int t[][NUM_STATION], int *e, int
 	return min(T1[NUM_STATION - 1] + x[0], T2[NUM_STATION - 1] + x[1], T3[NUM_STATION - 1] + x[2]);
 }
 
+int assemblyRec(int a[][NUM_STATION], int t[][NUM_STATION], int *e, int *x, int n, int line){
+	if (n == 0){
+		return e[line] + a[line][0];
+	}
+	int T0 = MAX;
+	int T1 = MAX;
+	int T2 = MAX;
+	if (line == 0){
+		T0 = min((assemblyRec(a, t, e, x, n - 1, 0) + a[0][n]), (assemblyRec(a, t, e, x, n - 1, 1) + t[1][n] + a[0][n]),
+			(assemblyRec(a, t, e, x, n - 1, 2) + t[1][n] + a[0][n]));
+	}
+	else if (line == 1){
+		T1 = min(assemblyRec(a, t, e, x, n - 1, 0) + a[0][n], assemblyRec(a, t, e, x, n - 1, 1) + t[1][n] + a[0][n],
+			assemblyRec(a, t, e, x, n - 1, 2) + t[1][n] + a[0][n]);
+	}
+	else if (line == 2){
+		T2 = min(assemblyRec(a, t, e, x, n - 1, 0) + a[0][n], assemblyRec(a, t, e, x, n - 1, 1) + t[1][n] + a[0][n],
+			assemblyRec(a, t, e, x, n - 1, 2) + t[1][n] + a[0][n]);
+	}
+	return min(T0, T1, T2);
+}
+
 int main()
 {
 	int a[][NUM_STATION] = { { 4, 5, 3, 2 },
 	{ 2, 10, 1, 4 }, { 4, 1, 2, 6 } };
-	int t[][NUM_STATION] = { { 1, 7, 4, 5 },
+	int t[][NUM_STATION] = { { 0, 7, 4, 5 },
 	{ 1, 9, 2, 8 }, { 1, 4, 2, 5 } };
 	int e[] = { 10, 12, 11 }, x[] = { 18, 7, 12 };
 
-	printf("Processing Time : %d\n", carAssemblyiterative(a, t, e, x));
+	printf("Processing Time by iterative : %d\n", assemblyiterative(a, t, e, x));
+	printf("Processing Time by recursive : %d\n", assemblyRec(a, t, e, x,NUM_STATION,NUM_LINE-1));
 	return 0;
 }
+
